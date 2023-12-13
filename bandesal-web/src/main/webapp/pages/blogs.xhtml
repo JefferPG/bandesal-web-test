@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/pages/index.xhtml">
+
+	<ui:define name="content">
+		<f:facet name="last">
+
+		</f:facet>
+
+		<h:form id="form">
+			<p:growl id="messages" showDetail="true" />
+
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="New" icon="pi pi-plus"
+						actionListener="#{blogBean.newBlog}"
+						update=":fDialogs:opBlogDialog"
+						oncomplete="PF('wvdSaveBlog').show()"
+						styleClass="ui-button-success" style="margin-right: .5rem">
+						<p:resetInput target=":fDialogs:opBlogDialog" />
+					</p:commandButton>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:dataTable id="dtBlogs" 
+				widgetVar="wvdtBlogs" 
+				var="blog"
+				value="#{blogBean.blogList}" 
+				reflow="true"
+				rowKey="#{blog.id}" 
+				paginator="true"
+				rows="10" 
+				rowSelectMode="add" 
+				paginatorPosition="bottom">
+
+				<f:facet name="header">
+					<div>
+						<span style="font-weight: bold">Blogs</span> <span
+							class="filter-container ui-input-icon-left"> <i
+							class="pi pi-search" /> <p:inputText id="itGlobalFilter"
+								onkeyup="PF('wvdtBlogs').filter()" placeholder="Search" />
+						</span>
+					</div>
+				</f:facet>
+
+				<p:column headerText="Id" sortBy="#{blog.id}" filterBy="#{blog.id}">
+					<h:outputText value="#{blog.id}" />
+				</p:column>
+
+				<p:column headerText="Tittle" sortBy="#{blog.tittle}"
+					filterBy="#{blog.tittle}">
+					<h:outputText value="#{blog.tittle}" />
+				</p:column>
+
+				<p:column headerText="Description" sortBy="#{blog.description}"
+					filterBy="#{blog.description}">
+					<h:outputText value="#{blog.description}" />
+				</p:column>
+
+				<p:column>
+					<p:commandButton icon="pi pi-pencil"
+						update=":fDialogs:opBlogDialog" process="@this"
+						oncomplete="PF('wvdSaveBlog').show()"
+						styleClass="edit-button rounded-button ui-button-success">
+						<f:setPropertyActionListener value="#{blog}"
+							target="#{blogBean.blog}" />
+						<p:resetInput target=":fDialogs:opBlogDialog" />
+					</p:commandButton>
+					<p:commandButton icon="pi pi-trash" update=":fDialogs"
+						oncomplete="PF('wvcdDeleteBlog').show()"
+						class="ui-button-warning rounded-button">
+						<f:setPropertyActionListener value="#{blog}"
+							target="#{blogBean.blog}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<h:form id="fDialogs">
+			<p:dialog widgetVar="wvdSaveBlog" header="Blog detail"
+				showEffect="fade" modal="true" responsive="true">
+				<p:outputPanel id="opBlogDialog" class="ui-fluid">
+					<div class="field">
+						<p:outputLabel for="tittle" value="Tittle: " />
+						<p:inputText id="tittle" value="#{blogBean.blog.tittle}"
+							required="true" />
+						<p:outputLabel for="description" value="Description: " />
+						<p:inputText id="description" value="#{blogBean.blog.description}"
+							required="true" />
+						<p:inputText id="id" value="#{blogBean.blog.id}"
+							style="display: none;" />
+					</div>
+				</p:outputPanel>
+
+				<f:facet name="footer">
+					<p:commandButton value="Save" icon="pi pi-check"
+						actionListener="#{blogBean.saveBlog}"
+						update=":fDialogs:opBlogDialog" process="opBlogDialog @this" />
+					<p:commandButton value="Cancel" icon="pi pi-times"
+						onclick="PF('wvdSaveBlog').hide()" class="ui-button-secondary"
+						type="button" />
+				</f:facet>
+			</p:dialog>
+
+			<p:confirmDialog widgetVar="wvcdDeleteBlog" header="Confirmation"
+				message="Delete blog #{blogBean.blog.tittle}?"
+				showEffect="fade" width="300" severity="warn">
+				<p:commandButton value="Yes" icon="pi pi-check"
+					actionListener="#{blogBean.deleteBlog}"
+					oncomplete="PF('wvcdDeleteBlog').hide()" />
+				<p:commandButton value="No" icon="pi pi-times" type="button"
+					onclick="PF('wvcdDeleteBlog').hide()"
+					styleClass="ui-button-secondary" />
+			</p:confirmDialog>
+
+			<p:confirmDialog global="true" showEffect="fade" width="300">
+				<p:commandButton value="Yes" icon="pi pi-check" type="button"
+					styleClass="ui-confirmdialog-yes" />
+				<p:commandButton value="No" icon="pi pi-times" type="button"
+					styleClass="ui-confirmdialog-no ui-button-secondary" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

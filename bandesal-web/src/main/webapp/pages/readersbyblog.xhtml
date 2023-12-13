@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/pages/index.xhtml">
+
+	<ui:define name="content">
+		<f:facet name="last">
+
+		</f:facet>
+
+		<h:form id="form">
+			<p:growl id="messages" showDetail="true" />
+
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Nuevo" icon="pi pi-plus"
+						actionListener="#{blogReaderBean.newBlogReader}"
+						update=":fDialogs:opBlogReaderDialog"
+						oncomplete="PF('wvdSaveBlogReader').show()"
+						styleClass="ui-button-success" style="margin-right: .5rem">
+						<p:resetInput target=":fDialogs:opBlogReaderDialog" />
+					</p:commandButton>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:dataTable id="dtBlogReaders" 
+				widgetVar="wvdtBlogReaders" 
+				var="blogReader" 
+				value="#{blogReaderBean.blogReaderList}"  
+				reflow="true"  
+				rowKey="#{blogReader.id}" 
+				paginator="true"
+				rows="10" 
+				rowSelectMode="add" 
+				paginatorPosition="bottom" >
+
+				<f:facet name="header">
+					<div>
+						<span style="font-weight: bold">Blog By Readers</span>
+						<span class="filter-container ui-input-icon-left">
+							<i class="pi pi-search" />
+							<p:inputText id="itGlobalFilter" onkeyup="PF('wvdtBlogReaders').filter()" placeholder="Search" />
+						</span>
+					</div>
+				</f:facet>
+
+				<p:column headerText="Id" sortBy="#{blogReader.id}" filterBy="#{blogReader.id}">
+					<h:outputText value="#{blogReader.id}" />
+				</p:column>
+
+				<p:column headerText="Reader name" sortBy="#{blogReader.reader.name}" filterBy="#{blogReader.reader.name}">
+					<h:outputText value="#{blogReader.reader.name}" />
+				</p:column>
+
+				<p:column headerText="Blog tittle" sortBy="#{blogReader.blog.tittle}" filterBy="#{blogReader.blog.tittle}">
+					<h:outputText value="#{blogReader.blog.tittle}" />
+				</p:column>
+
+				<p:column>
+					<p:commandButton icon="pi pi-pencil"
+						update=":fDialogs:opBlogReaderDialog" process="@this"
+						oncomplete="PF('wvdSaveBlogReader').show()"
+						styleClass="edit-button rounded-button ui-button-success">
+						<f:setPropertyActionListener value="#{blogReader}"
+							target="#{blogReaderBean.blogReader}" />
+						<p:resetInput target=":fDialogs:opBlogReaderDialog" />
+					</p:commandButton>
+					<p:commandButton icon="pi pi-trash" update=":fDialogs"
+						oncomplete="PF('wvcdDeleteBlogReader').show()"
+						class="ui-button-warning rounded-button">
+						<f:setPropertyActionListener value="#{blogReader}"
+							target="#{blogReaderBean.blogReader}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<h:form id="fDialogs">
+			<p:dialog widgetVar="wvdSaveBlogReader" header="Blog by Reader detail"
+				showEffect="fade" modal="true" responsive="true">
+				<p:outputPanel id="opBlogReaderDialog" class="ui-fluid">
+					<div class="field">
+						<p:outputLabel for="reader" value="Reader: " />
+						<p:selectOneMenu id="reader" value="#{blogReaderBean.blogReader.reader}" converter="#{readerConverter}" required="true" >
+							<f:selectItems value="#{blogReaderBean.readerList}" var="reader" itemValue="#{reader}" itemLabel="#{reader.name}" />
+						</p:selectOneMenu>
+						<p:outputLabel for="blog" value="Blog: " />
+						<p:selectOneMenu id="blog" value="#{blogReaderBean.blogReader.blog}" converter="#{blogConverter}" required="true" >
+							<f:selectItems value="#{blogReaderBean.blogList}" var="blog" itemValue="#{blog}" itemLabel="#{blog.tittle}" />
+						</p:selectOneMenu>
+						<p:inputText id="id" value="#{blogReaderBean.blogReader.id}" style="display: none;" />
+					</div>
+				</p:outputPanel>
+
+				<f:facet name="footer">
+					<p:commandButton value="Save" icon="pi pi-check"
+						actionListener="#{blogReaderBean.saveBlogReader}"
+						update=":fDialogs:opBlogReaderDialog" process="opBlogReaderDialog @this" />
+					<p:commandButton value="Cancel" icon="pi pi-times"
+						onclick="PF('wvdSaveBlogReader').hide()" class="ui-button-secondary"
+						type="button" />
+				</f:facet>
+			</p:dialog>
+
+			<p:confirmDialog widgetVar="wvcdDeleteBlogReader" header="Confirmation"
+				message="Delete blog #{blogReaderBean.blogReader.blog.tittle} from reader #{blogReaderBean.blogReader.reader.name}?"
+				showEffect="fade" width="300" severity="warn">
+				<p:commandButton value="Yes" icon="pi pi-check"
+					actionListener="#{blogReaderBean.deleteBlogReader}"
+					oncomplete="PF('wvcdDeleteBlogReader').hide()" />
+				<p:commandButton value="No" icon="pi pi-times" type="button"
+					onclick="PF('wvcdDeleteBlogReader').hide()"
+					styleClass="ui-button-secondary" />
+			</p:confirmDialog>
+
+			<p:confirmDialog global="true" showEffect="fade" width="300">
+				<p:commandButton value="Yes" icon="pi pi-check" type="button"
+					styleClass="ui-confirmdialog-yes" />
+				<p:commandButton value="No" icon="pi pi-times" type="button"
+					styleClass="ui-confirmdialog-no ui-button-secondary" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

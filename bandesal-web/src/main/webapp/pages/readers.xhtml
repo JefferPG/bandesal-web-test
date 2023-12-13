@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/pages/index.xhtml">
+
+	<ui:define name="content">
+		<f:facet name="last">
+
+		</f:facet>
+
+		<h:form id="form">
+			<p:growl id="messages" showDetail="true" />
+
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="New" icon="pi pi-plus"
+						actionListener="#{readerBean.newReader}"
+						update=":fDialogs:opReaderDialog"
+						oncomplete="PF('wvdSaveReader').show()"
+						styleClass="ui-button-success" style="margin-right: .5rem">
+						<p:resetInput target=":fDialogs:opReaderDialog" />
+					</p:commandButton>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:dataTable id="dtReaders" 
+				widgetVar="wvdtReaders" 
+				var="reader"
+				value="#{readerBean.readerList}" 
+				reflow="true"
+				rowKey="#{reader.id}" 
+				paginator="true"
+				rows="10" 
+				rowSelectMode="add" 
+				paginatorPosition="bottom">
+
+				<f:facet name="header">
+					<div>
+						<span style="font-weight: bold">Readers</span>
+						<span class="filter-container ui-input-icon-left">
+							<i class="pi pi-search" />
+							<p:inputText id="itGlobalFilter" onkeyup="PF('wvdtReaders').filter()" placeholder="Search" />
+						</span>
+					</div>
+				</f:facet>
+
+				<p:column headerText="Id" sortBy="#{reader.id}"
+					filterBy="#{reader.id}">
+					<h:outputText value="#{reader.id}" />
+				</p:column>
+
+				<p:column headerText="Name" sortBy="#{reader.name}"
+					filterBy="#{reader.name}">
+					<h:outputText value="#{reader.name}" />
+				</p:column>
+
+				<p:column width="">
+					<p:commandButton icon="pi pi-pencil"
+						update=":fDialogs:opReaderDialog" process="@this"
+						oncomplete="PF('wvdSaveReader').show()"
+						styleClass="edit-button rounded-button ui-button-success">
+						<f:setPropertyActionListener value="#{reader}"
+							target="#{readerBean.reader}" />
+						<p:resetInput target=":fDialogs:opReaderDialog" />
+					</p:commandButton>
+					<p:commandButton icon="pi pi-trash" update=":fDialogs"
+						oncomplete="PF('wvcdDeleteReader').show()"
+						class="ui-button-warning rounded-button">
+						<f:setPropertyActionListener value="#{reader}"
+							target="#{readerBean.reader}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<h:form id="fDialogs">
+			<p:dialog widgetVar="wvdSaveReader" header="Reader detail"
+				showEffect="fade" modal="true" responsive="true">
+				<p:outputPanel id="opReaderDialog" class="ui-fluid">
+					<div class="field">
+						<p:outputLabel for="name" value="Name: " />
+						<p:inputText id="name" value="#{readerBean.reader.name}" required="true" />
+						<p:inputText id="id" value="#{readerBean.reader.id}" style="display: none;" />
+					</div>
+				</p:outputPanel>
+
+				<f:facet name="footer">
+					<p:commandButton value="Save" icon="pi pi-check"
+						actionListener="#{readerBean.saveReader}"
+						update=":fDialogs:opReaderDialog" process="opReaderDialog @this" />
+					<p:commandButton value="Cancel" icon="pi pi-times"
+						onclick="PF('wvdSaveReader').hide()" class="ui-button-secondary"
+						type="button" />
+				</f:facet>
+			</p:dialog>
+
+			<p:confirmDialog widgetVar="wvcdDeleteReader" header="Confirmation"
+				message="Delete reader #{readerBean.reader.name} with id #{readerBean.reader.id}?"
+				showEffect="fade" width="300" severity="warn">
+				<p:commandButton value="Yes" icon="pi pi-check"
+					actionListener="#{readerBean.deleteReader}"
+					oncomplete="PF('wvcdDeleteReader').hide()" />
+				<p:commandButton value="No" icon="pi pi-times" type="button"
+					onclick="PF('wvcdDeleteReader').hide()"
+					styleClass="ui-button-secondary" />
+			</p:confirmDialog>
+
+			<p:confirmDialog global="true" showEffect="fade" width="300">
+				<p:commandButton value="Yes" icon="pi pi-check" type="button"
+					styleClass="ui-confirmdialog-yes" />
+				<p:commandButton value="No" icon="pi pi-times" type="button"
+					styleClass="ui-confirmdialog-no ui-button-secondary" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

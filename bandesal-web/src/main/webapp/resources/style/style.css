@@ -1,0 +1,73 @@
+@charset "ISO-8859-1";
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #dee2e6;
+}
+
+/* Header/Blog Title */
+.header {
+	padding: 30px;
+	text-align: center;
+}
+
+.header h1 {
+	font-size: 50px;
+	color: #303845;
+}
+
+/* Create two unequal columns that floats next to each other */
+/* Left column */
+.leftcolumn {
+	float: left;
+	width: 20%;
+	background-color: #f8f9fa;
+}
+
+/* Right column */
+.rightcolumn {
+	float: left;
+	width: 80%;
+	padding-left: 20px;
+}
+
+/* Center column */
+.centercolumn {
+	width: 35%;
+    padding-left: 20px;
+    text-align: justify;
+}
+
+/* Add a card effect for articles */
+.leftcolumn .card {
+	padding: 20px;
+}
+
+/* Change color on hover */
+.leftcolumn .card:hover {
+	background-color: #ffffff;
+	color: black;
+}
+
+.card h2 a {
+	display: block;
+}
+
+/* Footer */
+.footer {
+	padding: 20px;
+	text-align: center;
+	background: #ddd;
+	margin-top: 20px;
+}
+
+a:link, a:visited {
+  color: #303845;
+  padding: 10px 20px;
+  text-decoration: none;
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+}

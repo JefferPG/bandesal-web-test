@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+
+<h:body>
+	<f:facet name="last">
+		<h:outputStylesheet name="style/style.css" />
+	</f:facet>
+
+	<center>
+		<h:form id="form">
+			<p:growl id="messages" showDetail="true" />
+
+			<h2>Create User</h2>
+
+			<p:panelGrid columns="2" layout="grid" styleClass="centercolumn" >
+				<p:outputLabel value="User:" style="vertical-align: middle; font: oblique bold 120% cursive;" />
+				<p:inputText value="#{singUpBean.user.username}" required="true" />
+				<p:outputLabel value="Password:" style="vertical-align: middle; font: oblique bold 120% cursive;" />
+				<p:password value="#{singUpBean.user.password}" required="true" />
+			</p:panelGrid>
+
+			<p:commandButton value="Create" icon="pi pi-sign-in"
+				actionListener="#{singUpBean.saveUser}"
+				update=":form"
+				styleClass="ui-button-success" style="margin-right: .5rem">
+			</p:commandButton>
+		</h:form>
+	</center>
+</h:body>
+</html>
