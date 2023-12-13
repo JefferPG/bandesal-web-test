@@ -23,7 +23,7 @@ create table bandesal.blogs_readers (
 create table bandesal.users (
     id integer primary key generated always as identity,
     username varchar(25) NOT NULL,
-	password varchar(100) NOT NULL,
+    password varchar(100) NOT NULL,
 );
 ```
 > [!NOTE]
